@@ -1,9 +1,36 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CurrencyExchange", "CurrencyExchange", "{FCCC5B1B-7130-446D-97CF-336A402B15BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyExchangeApp", "src\CurrencyExchange\CurrencyExchangeApp\CurrencyExchangeApp.csproj", "{487A4555-EFA3-4108-97F2-05BB3D5B2BA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyExchange", "src\CurrencyExchange\CurrencyExchange\CurrencyExchange.csproj", "{B5A21AF0-D812-4027-940D-49D7C32B5652}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyExchangeTests", "tests\CurrencyExchangeTests\CurrencyExchangeTests.csproj", "{EB7F0C16-97E3-4A25-AED1-D142D3303ABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{487A4555-EFA3-4108-97F2-05BB3D5B2BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487A4555-EFA3-4108-97F2-05BB3D5B2BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487A4555-EFA3-4108-97F2-05BB3D5B2BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487A4555-EFA3-4108-97F2-05BB3D5B2BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5A21AF0-D812-4027-940D-49D7C32B5652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5A21AF0-D812-4027-940D-49D7C32B5652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5A21AF0-D812-4027-940D-49D7C32B5652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5A21AF0-D812-4027-940D-49D7C32B5652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7F0C16-97E3-4A25-AED1-D142D3303ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7F0C16-97E3-4A25-AED1-D142D3303ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7F0C16-97E3-4A25-AED1-D142D3303ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7F0C16-97E3-4A25-AED1-D142D3303ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{487A4555-EFA3-4108-97F2-05BB3D5B2BA7} = {FCCC5B1B-7130-446D-97CF-336A402B15BF}
+		{B5A21AF0-D812-4027-940D-49D7C32B5652} = {FCCC5B1B-7130-446D-97CF-336A402B15BF}
+		{EB7F0C16-97E3-4A25-AED1-D142D3303ABC} = {FCCC5B1B-7130-446D-97CF-336A402B15BF}
 	EndGlobalSection
 EndGlobal

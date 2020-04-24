@@ -290,7 +290,7 @@ namespace CurrencyExchange
                 Console.WriteLine($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
             Console.WriteLine("------------------------------------------------------------------------\n");
 
-            Save(currencyRates);
+            SaveToFile(currencyRates);
         }
 
         /// <summary>
@@ -298,23 +298,34 @@ namespace CurrencyExchange
         /// </summary>
         /// <param name="currencyRates"></param>
         /// <exception cref="ArgumentException"></exception>
-        public async void Save(List<Rate> currencyRates)
-        {
+        public async void SaveToFile (List<Rate> currencyRates)
+        {         
             if (currencyRates.Count == 0)
                 throw new ArgumentException();
 
-            string fileName = "temp.txt";
-            string path = Path.Combine(Directory.GetCurrentDirectory(), fileName);
-
-            using (StreamWriter writer = new StreamWriter(path, true, System.Text.Encoding.Default))
+            try
             {
-                await writer.WriteLineAsync($"\n Date : [{DateTime.Today,0:dd/MM/yyyy}]");
-                await writer.WriteLineAsync("------------------------------------------------------------------------");
-                await writer.WriteLineAsync($"|{"Currency Name",35}\t| Ammout x Code | Official rate\t|");
-                await writer.WriteLineAsync("------------------------------------------------------------------------");
-                foreach (var r in currencyRates)
-                    await writer.WriteLineAsync($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
-                await writer.WriteLineAsync("------------------------------------------------------------------------\n");
+                string tempDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
+                if (!Directory.Exists(tempDirectoryPath))
+                    Directory.CreateDirectory(tempDirectoryPath);
+
+                string filePath = Path.Combine(tempDirectoryPath, "temp.txt");
+
+                using (StreamWriter writer = new StreamWriter(filePath, true, System.Text.Encoding.Default))
+                {
+                    await writer.WriteLineAsync($"\n Date : [{DateTime.Today,0:dd/MM/yyyy}]");
+                    await writer.WriteLineAsync("------------------------------------------------------------------------");
+                    await writer.WriteLineAsync($"|{"Currency Name",35}\t| Ammout x Code | Official rate\t|");
+                    await writer.WriteLineAsync("------------------------------------------------------------------------");
+                    foreach (var r in currencyRates)
+                        await writer.WriteLineAsync($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
+                    await writer.WriteLineAsync("------------------------------------------------------------------------\n");
+                }
+            }
+
+            catch (DirectoryNotFoundException e)
+            {
+                Console.WriteLine($"The current directory for application does not exist. {e}");
             }
         }
     }

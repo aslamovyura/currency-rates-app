@@ -12,6 +12,9 @@ namespace CurrencyExchangeApp
 
         static void Main(string[] args)
         {
+            // Check currency rates for today.
+            Task.Run(() => currencyHandler.CheckCurrencyRates()).ContinueWith((t) => Console.Write("\nUser input: ")); ;
+
             GreetingMessage();
             Console.Write("\nUser input: ");
             while (true)

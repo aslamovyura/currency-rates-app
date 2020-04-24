@@ -108,7 +108,7 @@ namespace CurrencyExchange
         private async Task RequestCurrencyRatesAsync() => await Task.Run(() => RequestCurrencyRates());
 
         // Check, if there is some currency rate cache, if not, send request to the server.
-        private bool CheckCurrencyRates()
+        public bool CheckCurrencyRates()
         {
             // Try to connect to server to get the required data.
             if (_currencyRatesCache.Count == 0)

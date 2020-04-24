@@ -36,7 +36,7 @@ namespace CurrencyExchangeTests
         }
 
         [Fact]
-        public void RequestBuilder_WhenGetCurrencyInfoRequestWithNegativeIf_Return_ArgumentOutOfRangeException()
+        public void RequestBuilder_WhenBuildCurrencyInfoRequestWithNegativeId_Return_ArgumentOutOfRangeException()
         {
             // Arrange
             int currencyId = -5;
@@ -45,7 +45,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                requestBuilder.GetCurrencyInfoRequest(currencyId);
+                requestBuilder.BuildCurrencyInfoRequest(currencyId);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -57,7 +57,7 @@ namespace CurrencyExchangeTests
         }
 
         [Fact]
-        public void RequestBuilder_WhenGetCurrencyRateRequestWithNegativeCode_Return_ArgumentOutOfRangeException()
+        public void RequestBuilder_WhenBuildCurrencyRateRequestWithNegativeCode_Return_ArgumentOutOfRangeException()
         {
             // Arrange
             int currencyCode = -5;
@@ -66,7 +66,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                requestBuilder.GetCurrencyRateRequest(currencyCode);
+                requestBuilder.BuildCurrencyRateRequest(currencyCode);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -78,7 +78,7 @@ namespace CurrencyExchangeTests
         }
 
         [Fact]
-        public void RequestBuilder_WhenGetCurrencyRateRequestWithNullCurrencyAbbreviation_Return_ArgumentNullException()
+        public void RequestBuilder_WhenBuildCurrencyRateRequestWithNullCurrencyAbbreviation_Return_ArgumentNullException()
         {
             // Arrange
             string curAbbreviation = null;
@@ -87,7 +87,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                requestBuilder.GetCurrencyRateRequest(curAbbreviation);
+                requestBuilder.BuildCurrencyRateRequest(curAbbreviation);
             }
             catch (ArgumentNullException)
             {
@@ -99,7 +99,7 @@ namespace CurrencyExchangeTests
         }
 
         [Fact]
-        public void RequestBuilder_WhenGetCurrencyRateRequestWithNegativeIdAndNormalDate_Return_ArgumentOutOfRangeException()
+        public void RequestBuilder_WhenBuildCurrencyRateRequestWithNegativeIdAndNormalDate_Return_ArgumentOutOfRangeException()
         {
             // Arrange
             int currencyId = -5;
@@ -109,7 +109,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                requestBuilder.GetCurrencyRateRequest(currencyId, date);
+                requestBuilder.BuildCurrencyRateRequest(currencyId, date);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -121,7 +121,7 @@ namespace CurrencyExchangeTests
         }
 
         [Fact]
-        public void RequestBuilder_WhenGetCurrencyRateRequestWithNormalIdAndDefaulDate_Return_ArgumentNullException()
+        public void RequestBuilder_WhenBuildCurrencyRateRequestWithNormalIdAndDefaulDate_Return_ArgumentNullException()
         {
             // Arrange
             int currencyId = 1;
@@ -131,7 +131,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                requestBuilder.GetCurrencyRateRequest(currencyId, date);
+                requestBuilder.BuildCurrencyRateRequest(currencyId, date);
             }
             catch (ArgumentNullException)
             {

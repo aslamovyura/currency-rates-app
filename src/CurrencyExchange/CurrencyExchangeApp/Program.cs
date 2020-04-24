@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CurrencyExchange;
 
@@ -7,9 +8,8 @@ namespace CurrencyExchangeApp
     class Program
     {
         // Object containing info on the currency exchange rates.
-        static private CurrencyHandler currencyHandler = new CurrencyHandler();
+        static CurrencyHandler currencyHandler = new CurrencyHandler();
 
-        //static void Main(string[] args)
         static void Main(string[] args)
         {
             GreetingMessage();
@@ -64,9 +64,9 @@ namespace CurrencyExchangeApp
             Console.WriteLine("**********************************************\n");
 
             Console.WriteLine("`Currency Exchange` application provides you with information about the currencies exchange rates (based on http://www.nbrb.by)");
-            Console.WriteLine("P.S.: Application has a delay (3 sec) in requests.");
+            Console.WriteLine("P.S.: Application has a delay (3 sec) in requests & saving data to file.");
             Console.WriteLine("P.P.S: All processing data will be saved to the *.txt file .../TMS-DotNet-Team1-YAP/src/CurrencyExchange/CurrencyExchangeApp/bin/Debug/netcoreapp3.1/Temp/temp.txt");
-            Console.WriteLine("Input currency abbreviation (e.g. USD, EUR, RUB etc) or the following key:");
+            Console.WriteLine("\nInput currency abbreviation (e.g. USD, EUR, RUB etc) or the following key:");
             Console.WriteLine("\t`a` --- show all currency exchange rates");
             Console.WriteLine("\t`i` --- info on the whole worl-wide currencies");
             Console.WriteLine("\t`h` --- show available currencies");

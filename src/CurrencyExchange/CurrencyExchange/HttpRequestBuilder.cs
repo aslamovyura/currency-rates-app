@@ -23,51 +23,51 @@ namespace CurrencyExchange
         }
 
         /// <summary>
-        /// Get request for the information about the whole currencies at nbrb.by.
+        /// Build request for the information about the whole currencies at nbrb.by.
         /// </summary>
         /// <returns></returns>
-        public string GetCurrencyInfoRequest() => string.Concat(_root, "currencies/");
+        public string BuildCurrencyInfoRequest() => string.Concat(_root, "currencies/");
 
         /// <summary>
-        /// Get request for the information about the currency with a specific Identifier (accordint to nbrb.by).
+        /// Build request for the information about the currency with a specific Identifier (accordint to nbrb.by).
         /// </summary>
-        /// <param name="currencyId">Currency ID according to nbrb.by.</param>
+        /// <param name="curId">Currency ID according to nbrb.by.</param>
         /// <returns>URL request.</returns>
-        public string GetCurrencyInfoRequest(int currencyId)
+        public string BuildCurrencyInfoRequest(int curId)
         {
-            if (currencyId < 0)
+            if (curId < 0)
                 throw new ArgumentOutOfRangeException();
 
-            return string.Concat(_root, "currencies/", currencyId.ToString());
+            return string.Concat(_root, "currencies/", curId.ToString());
         }
 
         /// <summary>
-        /// Get request for the rates of the whole currencies at nbrb.by.
+        /// Build request for the rates of the whole currencies at nbrb.by.
         /// </summary>
         /// <returns></returns>
-        public string GetCurrencyRateRequest() => string.Concat(_root, "rates?periodicity=0");
+        public string BuildCurrencyRateRequest() => string.Concat(_root, "rates?periodicity=0");
 
         /// <summary>
-        /// Get request for the rate of the currency with a specific digital code (according to ISO-4217).
+        /// Build request for the rate of the currency with a specific digital code (according to ISO-4217).
         /// </summary>
-        /// <param name="digitalCode">Digital code of currency according to ISO-4217.</param>
+        /// <param name="curDigitalCode">Digital code of currency according to ISO-4217.</param>
         /// <returns>URL request.</returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public string GetCurrencyRateRequest(int digitalCode)
+        public string BuildCurrencyRateRequest(int curDigitalCode)
         {
-            if (digitalCode < 0)
+            if (curDigitalCode < 0)
                 throw new ArgumentOutOfRangeException();
 
-            return string.Concat(_root, "rates/", digitalCode.ToString(), "?parammode=1");
+            return string.Concat(_root, "rates/", curDigitalCode.ToString(), "?parammode=1");
         }
 
         /// <summary>
-        /// Get request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
+        /// Build request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
         /// </summary>
         /// <param name="curAbbreviation">Currency ISO-4217 abbreviation (USD, EUR, RUB).</param>
         /// <returns>URL request.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public string GetCurrencyRateRequest(string curAbbreviation)
+        public string BuildCurrencyRateRequest(string curAbbreviation)
         {
             curAbbreviation = curAbbreviation ?? throw new ArgumentNullException();
 
@@ -75,15 +75,15 @@ namespace CurrencyExchange
         }
 
         /// <summary>
-        /// Get request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
+        /// Build request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
         /// </summary>
-        /// <param name="currencyId">Currency ISO-4217 abbreviation (USD, EUR, RUB).</param>
+        /// <param name="curId">Currency ISO-4217 abbreviation (USD, EUR, RUB).</param>
         /// <returns>URL request.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public string GetCurrencyRateRequest(int currencyId, DateTime date)
+        public string BuildCurrencyRateRequest(int curId, DateTime date)
         {
-            if (currencyId < 0)
+            if (curId < 0)
                 throw new ArgumentOutOfRangeException();
 
             if (date == default)
@@ -100,7 +100,7 @@ namespace CurrencyExchange
                 return null;
             }
             
-            return string.Concat(_root, "rates/", currencyId, "?ondate=", dateString);
+            return string.Concat(_root, "rates/", curId, "?ondate=", dateString);
         }
     }
 }

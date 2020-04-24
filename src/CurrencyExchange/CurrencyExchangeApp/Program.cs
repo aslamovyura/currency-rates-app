@@ -65,7 +65,7 @@ namespace CurrencyExchangeApp
 
             Console.WriteLine("`Currency Exchange` application provides you with information about the currencies exchange rates (based on http://www.nbrb.by)");
             Console.WriteLine("P.S.: Application has a delay (3 sec) in requests.");
-            Console.WriteLine("P.P.S: All processing data will be saved to the *.txt file .../TMS-DotNet-Team1-YAP/src/CurrencyExchange/CurrencyExchangeApp/bin/Debug/netcoreapp3.1/temp.txt");
+            Console.WriteLine("P.P.S: All processing data will be saved to the *.txt file .../TMS-DotNet-Team1-YAP/src/CurrencyExchange/CurrencyExchangeApp/bin/Debug/netcoreapp3.1/Temp/temp.txt");
             Console.WriteLine("Input currency abbreviation (e.g. USD, EUR, RUB etc) or the following key:");
             Console.WriteLine("\t`a` --- show all currency exchange rates");
             Console.WriteLine("\t`i` --- info on the whole worl-wide currencies");

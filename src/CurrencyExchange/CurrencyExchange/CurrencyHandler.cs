@@ -299,18 +299,21 @@ namespace CurrencyExchange
         /// <param name="currencyRates"></param>
         /// <exception cref="ArgumentException"></exception>
         public async void SaveFile (List<Rate> currencyRates)
-        {
+        {         
             if (currencyRates.Count == 0)
                 throw new ArgumentException();
 
             string fileName = "temp.txt";
-            string currDir = @"d:\ApplicationFolder";
 
-            Directory.CreateDirectory(currDir);
+            string currentDirectoryPath = Directory.GetCurrentDirectory();
+            string currentDirectoryRoot = Directory.GetDirectoryRoot(currentDirectoryPath);
 
             try
             {
-                Directory.SetCurrentDirectory(currDir);
+                string currentDirectory = Path.Combine(currentDirectoryRoot, "ApplicationFolder");
+
+                Directory.CreateDirectory(currentDirectory);
+                Directory.SetCurrentDirectory(currentDirectory);
 
                 string path = Path.Combine(Directory.GetCurrentDirectory(), fileName);
 

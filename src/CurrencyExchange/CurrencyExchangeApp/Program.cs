@@ -44,6 +44,11 @@ namespace CurrencyExchangeApp
                         Console.Write("\nUser input: ");
                         break;
 
+                    case "S":
+                    case "SAVE":
+                        SaveToFileEnable();
+                        break;
+
                     case "Q":
                     case "QUIT":
                         Console.WriteLine("\nThank's for using this app! See you soon!");
@@ -72,6 +77,7 @@ namespace CurrencyExchangeApp
             Console.WriteLine("\nInput currency abbreviation (e.g. USD, EUR, RUB etc) or the following key:");
             Console.WriteLine("\t`a` --- show all currency exchange rates");
             Console.WriteLine("\t`i` --- info on the whole worl-wide currencies");
+            Console.WriteLine("\t`s` --- enable/disable saving to *.txt file (disable by default)");
             Console.WriteLine("\t`h` --- show available currencies");
             Console.WriteLine("\t`q` --- quit program");
         }
@@ -81,6 +87,22 @@ namespace CurrencyExchangeApp
         {
             Console.WriteLine("\nThe following currency abbreviations is available:");
             currencyHandler.ShowAvailableCurrencies();
-        } 
+        }
+
+        static void SaveToFileEnable()
+        {
+            string status;
+            if (currencyHandler.SaveToFileEnable)
+            {
+                currencyHandler.SaveToFileEnable = false;
+                status = "disable";
+            }     
+            else
+            {
+                currencyHandler.SaveToFileEnable = true;
+                status = "enable";
+            }
+            Console.WriteLine($"\nSaving to *.txt file is {status.ToUpper()} now.\n");
+        }
     }
 }

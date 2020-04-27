@@ -13,9 +13,12 @@ namespace CurrencyExchange
     /// <summary>
     /// Provides a base class to deal with currency rates.
     /// </summary>
-    public class CurrencyHandler
+    public class CurrencyHandler : IDisposable
     {
         #region Fields & Properties
+        // Disposing status.
+        private bool _disposed = false;
+
         // HTTP client to send requests to nbrb.by.
         private readonly HttpClient _client = new HttpClient();
 
@@ -27,6 +30,11 @@ namespace CurrencyExchange
 
         // Cache information on the currency rates (for today).
         private List<Rate> _currencyRatesCache = new List<Rate>();
+
+        /// <summary>
+        /// Enable/disable saving information to *.txt file.
+        /// </summary>
+        public bool SaveToFileEnable { get; set; } = false;
 
         #endregion
 
@@ -294,7 +302,8 @@ namespace CurrencyExchange
                 Console.WriteLine($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
             Console.WriteLine("------------------------------------------------------------------------\n");
 
-            Task.Run(() => SaveToFileAsync(currencyRates));
+            if (SaveToFileEnable)
+                Task.Run(() => SaveToFileAsync(currencyRates));
         }
 
         /// <summary>
@@ -323,6 +332,36 @@ namespace CurrencyExchange
                     await writer.WriteLineAsync($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
                 await writer.WriteLineAsync("------------------------------------------------------------------------\n");
             }
+        }
+        #endregion
+
+        #region IDisposable implementation
+        /// <summary>
+        /// Method for object disposing.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Method for object disposing.
+        protected virtual void Dispose(bool disposing)
+        {
+            if(!_disposed)
+            {
+                if(disposing)
+                {
+                    _client.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
+        // Destructor method.
+        ~CurrencyHandler()
+        {
+            Dispose(false);
         }
         #endregion
     }

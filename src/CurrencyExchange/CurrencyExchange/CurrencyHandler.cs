@@ -352,7 +352,8 @@ namespace CurrencyExchange
             {
                 if(disposing)
                 {
-                    _client.Dispose();
+                    if (_client != null)
+                        _client.Dispose();
                 }
                 _disposed = true;
             }

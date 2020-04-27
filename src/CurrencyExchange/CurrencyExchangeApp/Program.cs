@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using CurrencyExchange;
 
@@ -12,6 +12,13 @@ namespace CurrencyExchangeApp
 
         static void Main(string[] args)
         {
+            // Processing of command-line arguments
+            if (args.Length != 0)
+            {
+                CmdArgsProcessing(args);
+                return;
+            }
+                
             // Check currency rates for today.
             Task.Run(() => currencyHandler.CheckCurrencyRates()).ContinueWith((t) => Console.Write("\nUser input: ")); ;
 
@@ -40,7 +47,7 @@ namespace CurrencyExchangeApp
                     case "HELP":
                         Console.WriteLine();
                         GreetingMessage();
-                        HelpMessage();
+                        CurrencyListMessage();
                         Console.Write("\nUser input: ");
                         break;
 
@@ -56,9 +63,14 @@ namespace CurrencyExchangeApp
                         break;
 
                     default:
-                        Console.Write("\n Curriency rates are loading ... Please, wait.\n ");
-                        currencyHandler.ShowCurrencyRateAsync(input)
-                            .ContinueWith((t) => Console.Write("\nUser input: "));
+                        if (input.Length == 3 && input.All(c => char.IsLetter(c)))
+                        {
+                            Console.Write("\n Curriency rate is loading ... Please, wait.\n ");
+                            currencyHandler.ShowCurrencyRateAsync(input)
+                                .ContinueWith((t) => Console.Write("\nUser input: "));
+                        }
+                        else
+                            Console.Write("\n Unknown command or curriency abbreviation... Try again, please.\n ");
                         break;
                 }
             }
@@ -83,12 +95,13 @@ namespace CurrencyExchangeApp
         }
 
         // Print help message
-        static void HelpMessage()
+        static void CurrencyListMessage()
         {
             Console.WriteLine("\nThe following currency abbreviations is available:");
             currencyHandler.ShowAvailableCurrencies();
         }
 
+        // Enable / disable save to file
         static void SaveToFileEnable()
         {
             string status;
@@ -103,6 +116,79 @@ namespace CurrencyExchangeApp
                 status = "enable";
             }
             Console.WriteLine($"\nSaving to *.txt file is {status.ToUpper()} now.\n");
+        }
+
+        // Enable / disable save to file
+        static void SaveToFileEnable(bool saveToFileEnable)
+        {
+            string status;
+            if (!saveToFileEnable)
+            {
+                currencyHandler.SaveToFileEnable = false;
+                status = "disable";
+            }
+            else
+            {
+                currencyHandler.SaveToFileEnable = true;
+                status = "enable";
+            }
+            Console.WriteLine($"\nSaving to *.txt file is {status.ToUpper()} now.\n");
+        }
+
+        // Processing of command-line arguments.
+        static void CmdArgsProcessing(string[] args)
+        {
+            // Check if it is need to save info to *.txt file.
+            if (args.Any(a => a == "-s" || a == "--save"))
+            {
+                SaveToFileEnable(true);
+                args = args.Where(a => a != "-s").Where(a => a != "--save").ToArray();
+            }
+
+            // Check other commands
+            foreach (string arg in args)
+            {
+                switch (arg)
+                {
+                    case "-a":
+                    case "--all":
+                        Console.Write("\n Curriency rates are loading ... Please, wait.\n");
+                        currencyHandler.ShowAllCurrencyRatesAsync().GetAwaiter().GetResult();
+                        break;
+
+                    case "-c":
+                    case "--currency":
+                        Console.Write("\n Curriency rates are loading ... Please, wait.\n");
+                        CurrencyListMessage();
+                        break;
+
+                    case "-h":
+                    case "--help":
+                        Console.WriteLine();
+                        CmdHelpMessage();
+                        break;
+
+                    default:
+                        if (arg.Length == 3 && arg.All(c => char.IsLetter(c)))
+                        {
+                            Console.Write("\n Curriency rate is loading ... Please, wait.\n ");
+                            currencyHandler.ShowCurrencyRateAsync(arg).GetAwaiter().GetResult();
+                        }
+                        else
+                            Console.Write($"\n Unknown command {arg} or curriency abbreviation... Try again, please.\n ");
+                        break;
+                }
+            }
+        }
+
+        // Display the list of possible commands
+        static void CmdHelpMessage()
+        {
+                Console.WriteLine("\nInput currency abbreviation (e.g. USD, EUR, RUB etc) or the following command:");
+                Console.WriteLine("\t`-a`,`--all`       --- show all currency exchange rates");
+                Console.WriteLine("\t`-c`,`--currency`  --- info on the available currencies abbreviations");
+                Console.WriteLine("\t`-s`,`--save`      --- enable/disable saving to *.txt file (disable by default)");
+                Console.WriteLine("\t`-h`,`--help`      --- show available commands");
         }
     }
 }

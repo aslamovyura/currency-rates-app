@@ -1,5 +1,4 @@
-﻿using System;
-namespace CurrencyExchange.API
+﻿namespace CurrencyExchange.Core.Models
 {
     /// <summary>
     /// Provides a base class of nrbr.by API, which contains basic information about major currencies.

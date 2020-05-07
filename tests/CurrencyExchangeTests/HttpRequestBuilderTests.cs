@@ -1,5 +1,5 @@
 using Xunit;
-using CurrencyExchange;
+using CurrencyExchange.Core.Controllers;
 using System;
 
 namespace CurrencyExchangeTests
@@ -11,28 +11,6 @@ namespace CurrencyExchangeTests
         public HttpRequestBuilderTests()
         {
             requestBuilder = new HttpRequestBuilder();
-        }
-
-        [Fact]
-        public void RequestBuilder_WhenInitWithNullUrl_Return_ArgumentNullException()
-        {
-            // Arrange
-            HttpRequestBuilder requestBuilder;
-            string rootUrl = null;
-            bool isException = false;
-
-            // Act
-            try
-            {
-                requestBuilder = new HttpRequestBuilder(rootUrl);
-            }
-            catch (ArgumentNullException)
-            {
-                isException = true;
-            }
-
-            // Assert
-            Assert.True(isException);
         }
 
         [Fact]

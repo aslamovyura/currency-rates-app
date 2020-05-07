@@ -1,32 +1,24 @@
 ﻿using System;
-namespace CurrencyExchange
+using CurrencyExchange.Core.Interfaces;
+using CurrencyExchange.Core.Constants;
+
+namespace CurrencyExchange.Core.Controllers
 {
     /// <summary>
     /// Provides a base class to build requests to the nrbr.by.
     /// </summary>
-    public class HttpRequestBuilder
+    public class HttpRequestBuilder : IRequestBuilder
     {
-        // Root URL.
-        private readonly string _root = "https://www.nbrb.by/api/exrates/";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public HttpRequestBuilder() { }
 
         /// <summary>
-        /// Initialize httpRequestBuilder with root URL.
-        /// </summary>
-        public HttpRequestBuilder(string rootUrl)
-        {
-            _root = rootUrl ?? throw new ArgumentNullException();
-        }
-
-        /// <summary>
         /// Build request for the information about the whole currencies at nbrb.by.
         /// </summary>
-        /// <returns></returns>
-        public string BuildCurrencyInfoRequest() => string.Concat(_root, "currencies/");
+        /// <returns>URL request.</returns>
+        public string BuildCurrencyInfoRequest() => string.Concat(HttpConstants.Root, HttpConstants.Currencies);
 
         /// <summary>
         /// Build request for the information about the currency with a specific Identifier (accordint to nbrb.by).
@@ -38,14 +30,14 @@ namespace CurrencyExchange
             if (curId < 0)
                 throw new ArgumentOutOfRangeException();
 
-            return string.Concat(_root, "currencies/", curId.ToString());
+            return string.Concat(HttpConstants.Root, HttpConstants.Currencies, curId.ToString());
         }
 
         /// <summary>
         /// Build request for the rates of the whole currencies at nbrb.by.
         /// </summary>
-        /// <returns></returns>
-        public string BuildCurrencyRateRequest() => string.Concat(_root, "rates?periodicity=0");
+        /// <returns>URL request.</returns>
+        public string BuildCurrencyRateRequest() => string.Concat(HttpConstants.Root, HttpConstants.RatesToday);
 
         /// <summary>
         /// Build request for the rate of the currency with a specific digital code (according to ISO-4217).
@@ -58,11 +50,11 @@ namespace CurrencyExchange
             if (curDigitalCode < 0)
                 throw new ArgumentOutOfRangeException();
 
-            return string.Concat(_root, "rates/", curDigitalCode.ToString(), "?parammode=1");
+            return string.Concat(HttpConstants.Root, HttpConstants.Rates, curDigitalCode.ToString(), HttpConstants.RateByCode);
         }
 
         /// <summary>
-        /// Build request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
+        /// Build request for the currency rate based on the currency abbreviation according to ISO-4217 (USD, EUR, RUB).
         /// </summary>
         /// <param name="curAbbreviation">Currency ISO-4217 abbreviation (USD, EUR, RUB).</param>
         /// <returns>URL request.</returns>
@@ -71,13 +63,13 @@ namespace CurrencyExchange
         {
             curAbbreviation = curAbbreviation ?? throw new ArgumentNullException();
 
-            return string.Concat(_root, "rates/", curAbbreviation.ToUpper(), "?parammode=2");
+            return string.Concat(HttpConstants.Root, HttpConstants.Rates, curAbbreviation.ToUpper(), HttpConstants.RateByAbbr);
         }
 
         /// <summary>
-        /// Build request for the rate of the currency with a specific abbreviation according to ISO-4217 (USD, EUR, RUB).
+        /// Build request for the currency rate based on currency identifier.
         /// </summary>
-        /// <param name="curId">Currency ISO-4217 abbreviation (USD, EUR, RUB).</param>
+        /// <param name="curId">Currency identifier.</param>
         /// <returns>URL request.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
@@ -92,15 +84,15 @@ namespace CurrencyExchange
             string dateString;
             try
             {
-                dateString = date.ToString("yyyy-MM-dd");
+                dateString = date.ToString(HttpConstants.DateFormat);
             }
             catch
             {
-                Console.WriteLine("Invalid date-time format!");
+                Console.WriteLine(HttpErrorConstants.DateIssues);
                 return null;
             }
             
-            return string.Concat(_root, "rates/", curId, "?ondate=", dateString);
+            return string.Concat(HttpConstants.Root, HttpConstants.Rates, curId, HttpConstants.OnDate, dateString);
         }
     }
 }

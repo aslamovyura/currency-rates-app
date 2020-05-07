@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using CurrencyExchange.API;
+using Core.Interfaces;
+using CurrencyExchange.Core.Interfaces;
+using CurrencyExchange.Core.Models;
 using Newtonsoft.Json;
 
-namespace CurrencyExchange
+namespace CurrencyExchange.Core.Controllers
 {
     /// <summary>
     /// Provides a base class to deal with currency rates.
     /// </summary>
-    public class CurrencyHandler : IDisposable
+    public class CurrencyController : IDisposable
     {
         #region Fields & Properties
         // Disposing status.
@@ -23,13 +23,15 @@ namespace CurrencyExchange
         private readonly HttpClient _client = new HttpClient();
 
         // HTTP requests builder for the nbrb.by.
-        private readonly HttpRequestBuilder _requestBuilder = new HttpRequestBuilder();
+        private readonly IRequestBuilder _requestBuilder;
+
+        private readonly IWriter _fileWriter;
 
         // Cache information on the world-wide currencies.
-        private List<Currency> _currencyInfoCache = new List<Currency>();
+        private ICollection<Currency> _currencyInfoCache;
 
         // Cache information on the currency rates (for today).
-        private List<Rate> _currencyRatesCache = new List<Rate>();
+        private ICollection<Rate> _currencyRatesCache;
 
         /// <summary>
         /// Enable/disable saving information to *.txt file.
@@ -39,9 +41,15 @@ namespace CurrencyExchange
         #endregion
 
         /// <summary>
-        /// Default constructor.
+        /// Define currencyHandler object to check currency rates.
         /// </summary>
-        public CurrencyHandler(){ }
+        public CurrencyController()
+        {
+            _requestBuilder = new HttpRequestBuilder();
+            _fileWriter = new TxtFileWriter();
+            _currencyInfoCache = new List<Currency>();
+            _currencyRatesCache = new List<Rate>();
+        }
 
         #region Requests & Responses
         // Send request to the server asynchronously.
@@ -56,7 +64,6 @@ namespace CurrencyExchange
             {
                 HttpResponseMessage response = await _client.GetAsync(request);
                 response.EnsureSuccessStatusCode();
-                Thread.Sleep(3000); // Debug for async
                 responseBody = await response.Content.ReadAsStringAsync();
             }
             catch
@@ -67,7 +74,7 @@ namespace CurrencyExchange
             return responseBody;
         }
 
-        // Request the whole currency list.
+        // Request the whole list of currencies.
         private void RequestCurrencyInfo()
         {
             var request = _requestBuilder.BuildCurrencyInfoRequest();
@@ -242,8 +249,8 @@ namespace CurrencyExchange
             var currencyRate = _currencyRatesCache.FirstOrDefault(a => a.Cur_Abbreviation == abbreviation);
             if (currencyRate == null)
                 Console.WriteLine($"Unknown currency abbreviation {abbreviation}! Try again!");
-            else   
-                Print(currencyRate);
+            else
+                Print(new List<Rate> { currencyRate });
         }
 
         /// <summary>
@@ -272,66 +279,27 @@ namespace CurrencyExchange
         /// <summary>
         /// Print information on the currency rates to the console & *.txt file.
         /// </summary>
-        /// <param name="rate"Currency rate.></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void Print(Rate rate)
-        {
-            if (rate == null)
-                throw new ArgumentNullException();
-
-            List<Rate> rates = new List<Rate> { rate };
-            Print(rates);
-        }
-
-        /// <summary>
-        /// Print information on the currency rates to the console & *.txt file.
-        /// </summary>
         /// <param name="currencyRates"Currency rate.></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Print(List<Rate> currencyRates)
+        private void Print(ICollection<Rate> currencyRates)
         {
             if (currencyRates.Count == 0)
                 throw new ArgumentNullException();
 
-            // Show Currency Rates.
-            Console.WriteLine($"\n Date : [{DateTime.Today,0:dd/MM/yyyy}]");
-            Console.WriteLine("------------------------------------------------------------------------");
-            Console.WriteLine($"|{"Currency Name",35}\t| Ammout x Code | Official rate\t|");
-            Console.WriteLine("------------------------------------------------------------------------");
+            // Create content on currency rate.
+            string line = new string('-', 72) + "\n";
+
+            string content = $"\n Date : [{DateTime.Today,0:dd/MM/yyyy}]\n" + line +
+                            $"|{"Currency Name",35}\t| Ammout x Code | Official rate\t|\n" + line;
+
             foreach (var r in currencyRates)
-                Console.WriteLine($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
-            Console.WriteLine("------------------------------------------------------------------------\n");
+                content += $"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|\n";
+            content += line + "\n";
 
+            // Print to console & txt file.
+            Console.WriteLine(content);
             if (SaveToFileEnable)
-                Task.Run(() => SaveToFileAsync(currencyRates));
-        }
-
-        /// <summary>
-        /// Save information on the currency rates to the Temp/*.txt file.
-        /// </summary>
-        /// <param name="currencyRates"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public async Task SaveToFileAsync(List<Rate> currencyRates)
-        {
-            if (currencyRates.Count == 0)
-                throw new ArgumentNullException();
-
-            string tempDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
-            if (!Directory.Exists(tempDirectoryPath))
-                Directory.CreateDirectory(tempDirectoryPath);
-
-            string filePath = Path.Combine(tempDirectoryPath, "temp.txt");
-
-            using (StreamWriter writer = new StreamWriter(filePath, true, System.Text.Encoding.Default))
-            {
-                await writer.WriteLineAsync($"\n Date : [{DateTime.Today,0:dd/MM/yyyy}]");
-                await writer.WriteLineAsync("------------------------------------------------------------------------");
-                await writer.WriteLineAsync($"|{"Currency Name",35}\t| Ammout x Code | Official rate\t|");
-                await writer.WriteLineAsync("------------------------------------------------------------------------");
-                foreach (var r in currencyRates)
-                    await writer.WriteLineAsync($"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|");
-                await writer.WriteLineAsync("------------------------------------------------------------------------\n");
-            }
+                Task.Run(() => _fileWriter.WriteAsync(content));
         }
         #endregion
 
@@ -360,7 +328,7 @@ namespace CurrencyExchange
         }
 
         // Destructor method.
-        ~CurrencyHandler()
+        ~CurrencyController()
         {
             Dispose(false);
         }

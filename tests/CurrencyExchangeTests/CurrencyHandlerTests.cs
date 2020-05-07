@@ -1,21 +1,21 @@
 using Xunit;
-using CurrencyExchange;
+using CurrencyExchange.Core.Controllers;
 using System;
 using System.Reflection;
 using System.Linq;
 using System.Threading.Tasks;
-using CurrencyExchange.API;
+using CurrencyExchange.Core.Models;
 using System.Collections.Generic;
 
 namespace CurrencyExchangeTests
 {
     public class CurrencyHandlerTests
     {
-        public CurrencyHandler currencyHandler;
+        public CurrencyController currencyController;
 
         public CurrencyHandlerTests()
         {
-            currencyHandler = new CurrencyHandler();
+            currencyController = new CurrencyController();
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace CurrencyExchangeTests
             string request = null;
             bool isException = false;
 
-            Type type = typeof(CurrencyHandler);
+            Type type = typeof(CurrencyController);
             var handler = Activator.CreateInstance(type);
             MethodInfo method = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(x => x.Name == "SendRequestAsync" && x.IsPrivate)
@@ -56,7 +56,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                currencyHandler.ShowCurrencyRate(curAbbreviation);
+                currencyController.ShowCurrencyRate(curAbbreviation);
             }
             catch (ArgumentNullException)
             {
@@ -78,7 +78,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                currencyHandler.Print(rate);
+                currencyController.Print(rate);
             }
             catch (ArgumentNullException)
             {
@@ -99,7 +99,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                currencyHandler.Print(rates);
+                currencyController.Print(rates);
             }
             catch (ArgumentNullException)
             {
@@ -120,7 +120,7 @@ namespace CurrencyExchangeTests
             // Act
             try
             {
-                currencyHandler.SaveToFileAsync(rates).GetAwaiter().GetResult();
+                currencyController.SaveToFileAsync(rates).GetAwaiter().GetResult();
             }
             catch (ArgumentNullException)
             {

@@ -88,7 +88,7 @@ namespace CurrencyExchange.Core.Controllers
             }
             catch
             {
-                Console.WriteLine(HttpErrorConstants.DateIssues);
+                Console.WriteLine(ErrorConstants.DateFormatIssues);
                 return null;
             }
             

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using CurrencyExchange.Core.Constants;
 using CurrencyExchange.Core.Interfaces;
 using CurrencyExchange.Core.Models;
 using Newtonsoft.Json;
@@ -38,6 +39,11 @@ namespace CurrencyExchange.Core.Controllers
         /// </summary>
         public bool SaveToFileEnable { get; set; } = false;
 
+        /// <summary>
+        /// Enable/disable to save result to file asynchronously.
+        /// </summary>
+        public bool SaveToFileAsync { get; set; } = true;
+
         #endregion
 
         /// <summary>
@@ -68,7 +74,7 @@ namespace CurrencyExchange.Core.Controllers
             }
             catch
             {
-                Console.WriteLine("\nUnable to connect to server! Try later...");
+                Console.WriteLine("\n" + ErrorConstants.ConnectionIssues);
             }
 
             return responseBody;
@@ -132,7 +138,7 @@ namespace CurrencyExchange.Core.Controllers
                 // If there is still no data, return.
                 if (_currencyRatesCache.Count == 0)
                 {
-                    Console.WriteLine("No currency rates is available...");
+                    Console.WriteLine(ErrorConstants.NoCurrencyAvailable);
                     return false;
                 }
             }
@@ -152,7 +158,7 @@ namespace CurrencyExchange.Core.Controllers
                 // If there is still no data, return.
                 if (_currencyInfoCache.Count == 0)
                 {
-                    Console.WriteLine("No currency data is available...");
+                    Console.WriteLine(ErrorConstants.NoCurrencyAvailable);
                     return false;
                 }
             }
@@ -178,18 +184,17 @@ namespace CurrencyExchange.Core.Controllers
                 // If there is still no data, return.
                 if (_currencyInfoCache.Count == 0)
                 {
-                    Console.WriteLine("No currency data is available...");
+                    Console.WriteLine(ErrorConstants.NoCurrencyAvailable);
                     return;
                 }
             }
 
-            Console.WriteLine("\n\t\t\tWorld Currencies");
             Console.WriteLine("-------------------------------------------------------------");
             Console.WriteLine($"| Nbrn ID \t| Abbreviation\t| {"Currency Name",25} |");
             Console.WriteLine("-------------------------------------------------------------");
             foreach (var data in _currencyInfoCache)
                 Console.WriteLine($"| ID={data.Cur_ID,5:N0}\t| {data.Cur_Abbreviation,10}\t| {data.Cur_Name_Eng, 25} |");
-            Console.WriteLine("-------------------------------------------------------------\n");
+            Console.WriteLine("-------------------------------------------------------------");
         }
 
         /// <summary>
@@ -206,13 +211,12 @@ namespace CurrencyExchange.Core.Controllers
             if (!success)
                 return;
 
-            Console.WriteLine("\n               Available Currencies");
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine($"| Code \t| {"Currency Name",35} |");
             Console.WriteLine("-----------------------------------------------");
             foreach (var data in _currencyRatesCache)
                 Console.WriteLine($"| {data.Cur_Abbreviation}\t| {data.Cur_Name,35} |");
-            Console.WriteLine("-----------------------------------------------\n");
+            Console.WriteLine("-----------------------------------------------");
         }
 
         /// <summary>
@@ -248,9 +252,9 @@ namespace CurrencyExchange.Core.Controllers
 
             var currencyRate = _currencyRatesCache.FirstOrDefault(a => a.Cur_Abbreviation == abbreviation);
             if (currencyRate == null)
-                Console.WriteLine($"Unknown currency abbreviation {abbreviation}! Try again!");
+                Console.WriteLine(ErrorConstants.UnknownCurrency);
             else
-                Print(new List<Rate> { currencyRate });
+                Print(new List<Rate>{ currencyRate });
         }
 
         /// <summary>
@@ -294,12 +298,21 @@ namespace CurrencyExchange.Core.Controllers
 
             foreach (var r in currencyRates)
                 content += $"| {r.Cur_Name,35}\t| {r.Cur_Scale} x {r.Cur_Abbreviation}\t| {r.Cur_OfficialRate}\t|\n";
-            content += line + "\n";
+            content += line;
 
             // Print to console & txt file.
             Console.WriteLine(content);
             if (SaveToFileEnable)
-                Task.Run(() => _fileWriter.WriteAsync(content));
+            {
+                if (SaveToFileAsync)
+                {
+                    Task.Run(() => _fileWriter.WriteAsync(content));
+                }
+                else
+                {
+                    _fileWriter.WriteAsync(content);
+                }
+            }    
         }
         #endregion
 

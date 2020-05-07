@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Interfaces;
 
@@ -21,25 +22,7 @@ namespace CurrencyExchange.Core.Controllers
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
         public TxtFileWriter() { }
-
-
-        /// <summary>
-        /// Write string content to file.
-        /// </summary>
-        /// <param name="content">String writing content.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void Write(string content)
-        {
-            content = content ?? throw new ArgumentNullException(nameof(content));
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), FileName + EXT);
-
-            using (StreamWriter writer = new StreamWriter(filePath, true, System.Text.Encoding.Default))
-            {
-                writer.WriteLine(content);
-            }
-        }
 
         /// <summary>
         /// Write string content to file asynchronously.

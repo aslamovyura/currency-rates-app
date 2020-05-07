@@ -8,12 +8,6 @@ namespace Core.Interfaces
     public interface IWriter
     {
         /// <summary>
-        /// Write string content to file.
-        /// </summary>
-        /// <param name="content">String writing content.</param>
-        public void Write(string content);
-
-        /// <summary>
         /// Write string content to file asynchronously.
         /// </summary>
         /// <param name="content">String writing content.</param>

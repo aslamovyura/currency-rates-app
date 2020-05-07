@@ -1,5 +1,4 @@
-﻿using System;
-namespace CurrencyExchange.Core.Constants
+﻿namespace CurrencyExchange.Core.Constants
 {
     public class ErrorConstants
     {

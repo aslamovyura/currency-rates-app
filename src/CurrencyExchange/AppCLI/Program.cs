@@ -56,7 +56,6 @@ namespace AppCLI
                             else
                             {
                                 Console.Write($"\n Unknown command {arg} or curriency abbreviation... Try again, please.\n ");
-
                             }
                         }   
                         break;

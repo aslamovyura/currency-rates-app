@@ -13,7 +13,6 @@ namespace CurrencyExchange.AppConsole
         static void Main()
         {
             // Check currency rates for today.
-            //Task.Run(() => currencyController.CheckCurrencyRates()).ContinueWith((t) => ShowCursor());
             Task.Run(() => currencyController.CheckCurrencyRates());
 
             GreetingMessage();

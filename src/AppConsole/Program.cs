@@ -34,7 +34,6 @@ namespace CurrencyExchange.AppConsole
                     case "HELP":
                         Console.WriteLine();
                         HelpMessage();
-                        CurrencyListMessage();
                         ShowCursor();
                         break;
 
